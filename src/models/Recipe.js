@@ -18,7 +18,7 @@ const RecipeSchema = new mongoose.Schema({
         required: true
     },
     cookingTime: {
-        type: Number,
+        type: String,
         required: true
     },
     userOwner: {
