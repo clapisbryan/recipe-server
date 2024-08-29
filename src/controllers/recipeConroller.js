@@ -39,7 +39,7 @@ const savedRecipe = async (req, res) => {
         user.savedRecipe.push(recipe)
         return user.save()
             .then(recipe => {
-                return res.json({ savedRecipe: recipe });
+                return res.json({ savedRecipe: recipe.savedRecipe });
             })
             .catch(err => { return res.json(err) })
     } catch (error) {
@@ -49,8 +49,8 @@ const savedRecipe = async (req, res) => {
 
 const savedRecipeById = async (req, res) => {
     try {
-        const user = await UserModel.findById(req.body.useID);
-        res.json({ savedRecipe: user?.savedRecipes });
+        const user = await UserModel.findById(req.params.userID);
+        res.json({ savedRecipe: user?.savedRecipe });
 
     } catch (error) {
         return res.json(error)
@@ -59,10 +59,13 @@ const savedRecipeById = async (req, res) => {
 
 const savedRecipes = async (req, res) => {
     try {
-        const user = await UserModel.findById(req.body.useID);
+        const userId = req.params.userID
+        const user = await UserModel.findById(userId);
+        
         const savedRecipes = await RecipeModel.find({
-            _id: {$in: user.savedRecipe}
+            _id: { $in: user?.savedRecipe }
         })
+        console.log(savedRecipes);
         res.json({ savedRecipes });
 
     } catch (error) {

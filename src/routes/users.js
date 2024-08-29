@@ -2,6 +2,9 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { UserModel } from '../models/User.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const router = express.Router();
 
@@ -40,8 +43,22 @@ router.post("/login", async (req, res) => {
         return res.json({ message: "Username or Password is Incorrect!" });
     }
 
-    const token = jwt.sign({ id: user._id }, "secret");
+    const token = jwt.sign({ id: user._id }, process.env.AUTH_SECRET_KEY);
     res.json({ token, userID: user._id });
 });
 
 export { router as userRoute }
+
+
+export const verifyToken = (req, res, next) => {
+    const token = req.headers.authorization;
+
+    if (token) {
+        jwt.verify(token, process.env.AUTH_SECRET_KEY, (err) => {
+            if (err) return res.sendStatus(403);
+            next();
+        });
+    } else {
+        res.sendStatus(401);
+    }
+};
