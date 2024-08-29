@@ -8,6 +8,10 @@ router.get("/", recipeController.getRecipe);
 
 router.post("/create-recipe", recipeController.createRecipe);
 
-router.put("/saved-recipe", recipeController.savedRecipe);
+router.put("/", recipeController.savedRecipe);
+
+router.get("/saved-recipe/:ids", recipeController.savedRecipeById);
+
+router.get("/saved-recipe", recipeController.savedRecipes);
 
 export { router as recipeRouter }

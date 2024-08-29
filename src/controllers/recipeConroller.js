@@ -47,4 +47,27 @@ const savedRecipe = async (req, res) => {
     }
 }
 
-export default { getRecipe, createRecipe, savedRecipe };
+const savedRecipeById = async (req, res) => {
+    try {
+        const user = await UserModel.findById(req.body.useID);
+        res.json({ savedRecipe: user?.savedRecipes });
+
+    } catch (error) {
+        return res.json(error)
+    }
+}
+
+const savedRecipes = async (req, res) => {
+    try {
+        const user = await UserModel.findById(req.body.useID);
+        const savedRecipes = await RecipeModel.find({
+            _id: {$in: user.savedRecipe}
+        })
+        res.json({ savedRecipes });
+
+    } catch (error) {
+        return res.json(error)
+    }
+}
+
+export default { getRecipe, createRecipe, savedRecipe, savedRecipeById, savedRecipes };
