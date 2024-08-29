@@ -3,8 +3,8 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
-import { userRoute } from './routes/users.js';
-import { recipeRouter } from './routes/recipes.js';
+import { userRoute } from './src/routes/users.js';
+import { recipeRouter } from './src/routes/recipes.js';
 
 dotenv.config();
 
