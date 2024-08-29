@@ -1,0 +1,50 @@
+import mongoose from "mongoose"
+import { RecipeModel } from "../models/Recipe.js"
+import { UserModel } from "../models/User.js"
+
+const getRecipe = async (req, res) => {
+    try {
+        await RecipeModel.find({}).then(recipe => {
+            return res.json(recipe)
+        }).catch(err => res.json(err))
+    } catch (err) {
+        return res.json(err)
+    }
+}
+
+const createRecipe = async (req, res) => {
+    const { name, ingredients, instruction, imageUrl, cookingTime, userOwner } = req.body;
+
+    try {
+        const recipe = new RecipeModel({
+            name,
+            ingredients,
+            instruction,
+            imageUrl,
+            cookingTime,
+            userOwner
+        });
+        await recipe.save().then(recipe => {
+            return res.json(recipe)
+        }).catch(err => { return res.json(err) })
+    } catch (err) {
+        return res.json(err)
+    }
+}
+
+const savedRecipe = async (req, res) => {
+    try {
+        const recipe = await RecipeModel.findById(req.body.recipeID)
+        const user = await UserModel.findById(req.body.userID)
+        user.savedRecipe.push(recipe)
+        return user.save()
+            .then(recipe => {
+                return res.json({ savedRecipe: recipe });
+            })
+            .catch(err => { return res.json(err) })
+    } catch (error) {
+        return res.json(err)
+    }
+}
+
+export default { getRecipe, createRecipe, savedRecipe };
